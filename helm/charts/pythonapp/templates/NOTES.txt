@@ -1,2 +1,15 @@
 Python App can be accessed via port 5000 on the following DNS name from within your cluster:
-python-app-svc.{{ .Release.Namespace }}.svc.cluster.local
+{{ template "pythonapp.name" . }}-svc.{{ .Release.Namespace }}.svc.cluster.local
+
+
+To access the Python App use the following details,
+
+    HOST=kubectl get svc --namespace {{ .Release.Namespace }}  {{ template "pythonapp.name" . }}-svc -o jsonpath={.spec.clusterIP}
+    PORT=kubectl get svc --namespace {{ .Release.Namespace }}  {{ template "pythonapp.name" . }}-svc -o jsonpath={.spec.ports[0].targetPort}
+
+    {{- if .Values.ingress.enabled }}
+    Ingress is enabled, Ingress details are as follows,
+    HOST=kubectl get ing  {{ template "pythonapp.name" . }}-ingress --namespace {{ .Release.Namespace }} -o jsonpath='{.spec.rules[0].host}'
+    {{- end }}
+
+

@@ -1,0 +1,8 @@
+Elasticsearch DB can be accessed via port 9200 on the following DNS name from within your cluster:
+{{ .Values.global.elasticsearchSvc }}.{{ .Release.Namespace }}.svc.cluster.local
+
+To access elasticsearch use the following commands
+
+    HOST=kubectl get svc --namespace {{ .Release.Namespace }}  {{ template "elastic.name" . }}-svc -o jsonpath={.spec.clusterIP}
+    PORT=kubectl get svc --namespace {{ .Release.Namespace }}  {{ template "elastic.name" . }}-svc -o jsonpath={.spec.ports[0].targetPort}
+

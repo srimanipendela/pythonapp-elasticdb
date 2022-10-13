@@ -1,12 +1,12 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "elasticsearch.uname" . -}}
+{{- $fullName := include "pythonapp.name" . -}}
 {{- $httpPort := .Values.httpPort -}}
 {{- $pathtype := .Values.ingress.pathtype -}}
 {{- $ingressPath := .Values.ingress.path -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-ingress
   labels:
     app: {{ .Chart.Name }}
     release: {{ .Release.Name }}

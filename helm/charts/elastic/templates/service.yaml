@@ -10,8 +10,8 @@ spec:
   - name: ealsticport
     port: {{ .Values.service.port }}
     targetPort: {{ .Values.global.elasticsearchPort }}
-    {{- if eq .Values.service.type "NodePort" }}
-    nodePort: {{ .Values.gloabl.elasticsearchPort }}
+    {{- if .Values.service.nodePort }}
+    nodePort: {{ .Values.global.elasticsearchPort }}
     {{- end }}
   selector:
     {{- include "elastic.selectorLabels" . | nindent 4 }}
