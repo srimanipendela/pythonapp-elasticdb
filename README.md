@@ -4,7 +4,7 @@
 
 Its a simple python application which maintains a list of cities and their population. This application uses elasticsearch as database. 
 
-This application with elastic DB is containerized, and packaged for deployment to Kubernetes with hem and for deployment to docker environment with docker-compose(>1.29).
+This application with elastic DB is containerized, and packaged for deployment to Kubernetes with helm and for deployment to docker environment with docker-compose(>1.29).
 
 
 ### Available API in Python APP
