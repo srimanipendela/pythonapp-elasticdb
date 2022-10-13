@@ -22,18 +22,20 @@ get_inputs()
 }
 
 get_inputs
-
+echo $KUBECONFIG
 if [ "${deployment_type}" = "docker-compose" ]; then
     if ! docker ps > /dev/null 2>&1 ; then
        error "Docker service down. Please check the service status and try the installation"
     fi 
     docker-compose up -d
 else
-    if [ ! -f ~/.kube/config || $KUBECONFIG ]; then
-       error "Cant find kube config in this location ~/.kube/config. Please add config to ~/.kube/config or export config as $KKUBECONFG and run the task" 
+    if [ -f ~/.kube/config ] || [ ! -z "$KUBECONFIG" ]; then
+        helm install sreassignment ./helm/   --render-subchart-notes
+    else
+        error "Cant find kube config in this location ~/.kube/config. Please add config to ~/.kube/config or export config as KUBECONFG and run the task"
     fi
-    helm install sreassignment ./helm/   --render-subchart-notes   
 fi
+
 
 log "#############################################"
 log "Deployiment finsished using $deployment_type"
