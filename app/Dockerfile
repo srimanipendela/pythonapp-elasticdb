@@ -8,7 +8,9 @@ WORKDIR /home/g42/app/
 
 COPY app.py requirements.txt /home/g42/app/
 
-RUN chmod -R 755 /home/g42/app/
+RUN chown -R g42:g42 /home/g42/app/
+
+RUN chmod -R 711 /home/g42/app/
 
 USER g42
 
