@@ -1,0 +1,15 @@
+apiVersion: v2
+appVersion: 1.0.0
+dependencies:
+- condition: elastic.enabled
+  name: elastic
+  repository: ""
+- condition: pythonapp.enabled
+  name: pythonapp
+  repository: ""
+description: A Helm chart for Kubernetes
+name: g42-assignment
+type: application
+version: 1.0.0
+maintainers:
+  - name: Manikanta Pendela

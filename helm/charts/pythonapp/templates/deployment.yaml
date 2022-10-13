@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pythonapp.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "pythonapp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pythonapp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "pythonapp.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- if .Values.serviceAccount.enabled }}
+      serviceAccountName: {{ include "elastic.serviceAccountName" . }}
+      {{- end }}
+      {{- end }}
+      initContainers:
+      - name: "elasticinitcontainer"
+        image: {{ .Values.initContainer.image }}
+        imagePullPolicy: {{ .Values.initContainer.pullPolicy | quote }}
+        resources:
+{{ toYaml .Values.initContainer.resources | indent 10 }}
+        command:
+          - sh
+          - -c
+          - "curl -XGET --fail http://${elasticsearchsvc}:${elasticsearchport}/_cluster/health --connect-timeout 1"        
+        env:
+          - name: elasticsearchsvc
+            value: {{ .Values.global.elasticsearchSvc }}
+          - name: elasticsearchport
+            value: "{{ .Values.global.elasticsearchPort }}"
+      containers:
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}        
+        name: python-web-app
+        ports:
+          - containerPort: 5000
+        env:
+          - name: elasticsearchsvc
+            value: {{ .Values.global.elasticsearchSvc }}
+          - name: elasticsearchport
+            value: "{{ .Values.global.elasticsearchPort }}"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
