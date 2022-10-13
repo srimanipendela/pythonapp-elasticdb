@@ -8,7 +8,7 @@ dependencies:
   name: pythonapp
   repository: ""
 description: A Helm chart for Kubernetes
-name: g42-assignment
+name: pythonapp-elasticdb
 type: application
 version: 1.0.0
 maintainers:

@@ -2,17 +2,17 @@ FROM python:3.6-slim
 
 EXPOSE 5000
 
-RUN useradd -ms /bin/bash g42
+RUN useradd -ms /bin/bash pyapp
 
-WORKDIR /home/g42/app/
+WORKDIR /home/pyapp/app/
 
-COPY app.py requirements.txt /home/g42/app/
+COPY app.py requirements.txt /home/pyapp/app/
 
-RUN chown -R g42:g42 /home/g42/app/
+RUN chown -R pyapp:pyapp /home/pyapp/app/
 
-RUN chmod -R 711 /home/g42/app/
+RUN chmod -R 711 /home/pyapp/app/
 
-USER g42
+USER pyapp
 
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
