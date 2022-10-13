@@ -1,0 +1,2 @@
+Python App can be accessed via port 5000 on the following DNS name from within your cluster:
+python-app-svc.{{ .Release.Namespace }}.svc.cluster.local

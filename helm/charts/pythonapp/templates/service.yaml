@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-app-svc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "pythonapp.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type | default "LoadBalancer" }}
+  ports:
+    - name: pythonapp
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: 5000
+      {{- if .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "pythonapp.selectorLabels" . | nindent 4 }}
